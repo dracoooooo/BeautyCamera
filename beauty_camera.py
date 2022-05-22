@@ -54,6 +54,7 @@ class BeautyCamera:
             pass
 
         show_image = eval(conf.get('Common', 'ShowImage'))
+        debug = conf.getboolean('Common', 'Debug')
 
         if show_image:
             cv.imshow('raw', self.frame)
@@ -61,11 +62,21 @@ class BeautyCamera:
         frameBGR = self.frame
         frameRGB = cv.cvtColor(frameBGR, cv.COLOR_BGR2RGB)
 
+        region_mask = detect_skin(frameRGB)
+
+        if debug:
+            cv.imshow('skin mask', region_mask)
+
+        skin = Region(frameRGB, region_mask)
+
+        skin.lighten(conf.getint('Beautify', 'SkinLighten'))
+        skin.sharpen(conf.getfloat('Beautify', 'SkinSharpen'))
+        skin.smooth(conf.getint('Beautify', 'SkinSmooth'))
+
         dets = self.detector(frameRGB, 1)
 
         faces = []
 
-        debug = conf.getboolean('Common', 'Debug')
         for k, d in enumerate(dets):
             (x, y, w, h) = face_utils.rect_to_bb(d)
             shape = self.predictor(frameRGB, d)
@@ -108,17 +119,6 @@ class BeautyCamera:
                 frameRGB = combine_two_color_images_with_anchor(effect_frame, frameRGB, self.effect.get_mask(),
                                                                 landmarks[self.effect.landmark][1],
                                                                 landmarks[self.effect.landmark][0])
-
-        region_mask = detect_skin(frameRGB)
-
-        if debug:
-            cv.imshow('skin mask', region_mask)
-
-        skin = Region(frameRGB, region_mask)
-
-        skin.lighten(conf.getint('Beautify', 'SkinLighten'))
-        skin.sharpen(conf.getfloat('Beautify', 'SkinSharpen'))
-        skin.smooth(conf.getint('Beautify', 'SkinSmooth'))
 
         self.whole_image.brighten(conf.getint('Beautify', 'ImageLighten'))
 

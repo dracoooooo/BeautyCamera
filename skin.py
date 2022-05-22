@@ -4,7 +4,7 @@ import numpy as np
 from config import conf
 
 """
-reference： https://www.researchgate.net/profile/Gabriel-Sanchez-Perez/publication/262371199_Explicit_image_detection_using_YCbCr_space_color_model_as_skin_detection/links/549839cf0cf2519f5a1dd966/Explicit-image-detection-using-YCbCr-space-color-model-as-skin-detection.pdf
+reference: https://ieeexplore.ieee.org/document/767122
 """
 
 skin_ycrcb_mint = np.array((0, 133, 77))

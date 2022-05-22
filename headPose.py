@@ -50,6 +50,6 @@ def get_head_pose(landmarks: np.ndarray, image: np.ndarray) -> np.ndarray:
         p1 = (int(image_points[0][0]), int(image_points[0][1]))
         p2 = (int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
         cv.line(image, p1, p2, (255, 0, 0), 2)
-        cv.imshow("head pose", image)
+        cv.imshow("head pose", cv.cvtColor(image, cv.COLOR_RGB2BGR))
 
     return rotation_vector
